@@ -3,6 +3,7 @@ import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PageHeader } from "@/components/crm/shared"
 import { JobsBrowser } from "@/components/crm/jobs-browser"
+import { Suspense } from "react"
 
 type JobsPageProps = {
   searchParams: Promise<{
@@ -11,7 +12,16 @@ type JobsPageProps = {
   }>
 }
 
-export default async function JobsPage({ searchParams }: JobsPageProps) {
+
+export default function JobsPage({ searchParams }: JobsPageProps) {
+  return (
+    <Suspense fallback={<div>Loading service jobs...</div>}>
+      <JobsContent searchParams={searchParams} />
+    </Suspense>
+  )
+}
+
+async function JobsContent({ searchParams }: JobsPageProps) {
   const { status, customer } = await searchParams
 
   return (

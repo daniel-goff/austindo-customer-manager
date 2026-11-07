@@ -1,3 +1,62 @@
+import { PageHeader } from "@/components/crm/shared"
+import { CustomersBrowser } from "@/components/crm/customer-browser"
+
+import {
+  customers,
+  equipment,
+  jobs,
+  jobTotal,
+  isOpen,
+} from "@/lib/data"
+
+export default function CustomersPage() {
+
+  // Calculate statistics for each customer.
+  const customerRows = customers.map((customer) => {
+
+    // Find all repair jobs belonging to this customer.
+    const customerJobs = jobs.filter(
+      (job) => job.customerId === customer.id
+    )
+
+    // Count equipment belonging to this customer.
+    const boardCount = equipment.filter(
+      (board) => board.customerId === customer.id
+    ).length
+
+    // Calculate the total cost of completed repairs.
+    const totalSpend = customerJobs.reduce(
+      (total, job) =>
+        total + (job.completedDate ? jobTotal(job) : 0),
+      0
+    )
+
+    // Combine customer details with their statistics.
+    return {
+      ...customer,
+      boards: boardCount,
+      repairs: customerJobs.length,
+      open: customerJobs.filter(isOpen).length,
+      spend: totalSpend,
+    }
+  })
+
+  return (
+    <div className="mx-auto flex max-w-7xl flex-col">
+
+      <PageHeader
+        title="Customers"
+        description="View and manage your customers."
+      />
+
+      <CustomersBrowser initialCustomers={customerRows} />
+
+    </div>
+  )
+}
+
+
+/*
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { PageHeader } from "@/components/crm/shared";
@@ -63,7 +122,9 @@ export default function CustomersPage() {
                 </span>
               )}
             </div>
-            {/* Customer Stats */}
+            {/* Customer Stats */
+
+             /*
             <div className="grid grid-cols-3 gap-2 rounded-md bg-muted/60 p-3 text-center">
               <div>
                 <p className="text-xs text-muted-foreground">Boards</p>
@@ -82,7 +143,8 @@ export default function CustomersPage() {
                 </p>
               </div>
             </div>
-            {/* Customer contact information */}
+            {/* Customer contact information */
+            /*/*
             <div className="flex flex-col gap-1 text-sm">
               <p className="font-medium">{customer.contact}</p>
 
@@ -114,3 +176,4 @@ export default function CustomersPage() {
     </div>
   );
 }
+*/
